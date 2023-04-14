@@ -39,6 +39,7 @@ class Database(ProfilingFlowsDatabase, object):
         'new_blocking',
         'new_ssh',
         'new_notice',
+        'add_label',
         'new_url',
         'finished_modules',
         'new_downloaded_file',
