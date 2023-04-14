@@ -96,6 +96,11 @@ class ConfigParser(object):
         except Exception:
             return 700
 
+    def add_labels(self) -> bool:
+        return 'yes' in self.read_configuration(
+            'parameters', 'add_labels', 'no'
+        )
+
 
     def get_all_homenet_ranges(self):
         return self.home_network_ranges
@@ -705,6 +710,9 @@ class ConfigParser(object):
                 or '-p' in sys.argv
         ):
             to_ignore.append('blocking')
+
+        if not self.add_labels():
+            to_ignore.append('labeler')
 
         # leak detector only works on pcap files
         if input_type != 'pcap':
