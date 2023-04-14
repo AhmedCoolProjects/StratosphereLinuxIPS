@@ -61,7 +61,7 @@ class Module(Module, multiprocessing.Process):
                     self.shutdown_gracefully()
                     return True
 
-                if message and message['channel'] == 'new_ip':
+                if utils.is_msg_intended_for(message, 'new_ip'):
                     # Example of printing the number of profiles in the
                     # Database every second
                     data = len(__database__.getProfiles())
