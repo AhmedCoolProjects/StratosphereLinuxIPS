@@ -1610,24 +1610,31 @@ class Database(ProfilingFlowsDatabase, object):
         return 'yes' in str(self.r.get('growing_zeek_dir'))
 
     def set_module_label_to_flow(
-        self, profileid, twid, uid, module_name, module_label
+        self, profileid, twid, uids, module_name, module_label
     ):
         """
         Add a module label to the flow
         """
-        flow = self.get_flow(profileid, twid, uid)
-        if flow and flow[uid]:
-            data = json.loads(flow[uid])
-            # here we dont care if add new module lablel or changing existing one
-            data['module_labels'][module_name] = module_label
-            data = json.dumps(data)
-            self.r.hset(
-                profileid + self.separator + twid + self.separator + 'flows',
-                uid,
-                data,
-            )
-            return True
-        return False
+        label_set = False
+
+        if type(uids) != list:
+            # convert it to a list
+            uids = [uids]
+
+        for uid in uids:
+            flow = self.get_flow(profileid, twid, uid)
+            if flow and flow[uid]:
+                data = json.loads(flow[uid])
+                # here we dont care if add new module lablel or changing existing one
+                data['module_labels'][module_name] = module_label
+                data = json.dumps(data)
+                self.r.hset(
+                    profileid + self.separator + twid + self.separator + 'flows',
+                    uid,
+                    data,
+                )
+                label_set = True
+        return label_set
 
     def get_module_labels_from_flow(self, profileid, twid, uid):
         """
