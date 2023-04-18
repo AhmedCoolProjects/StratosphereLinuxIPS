@@ -1614,17 +1614,29 @@ class Database(ProfilingFlowsDatabase, object):
 
         for uid in uids:
             flow = self.get_flow(profileid, twid, uid)
-            if flow and flow[uid]:
-                data = json.loads(flow[uid])
-                # here we dont care if add new module lablel or changing existing one
-                data['module_labels'][module_name] = module_label
-                data = json.dumps(data)
-                self.r.hset(
-                    profileid + self.separator + twid + self.separator + 'flows',
-                    uid,
-                    data,
-                )
-                label_set = True
+            if not (flow and flow[uid]):
+                # cant get this flow
+                continue
+
+            flow: dict = json.loads(flow[uid])
+            # here we dont care if add new module lablel or changing existing one
+            flow['module_labels'][module_name] = module_label
+            flow_type = flow['flow_type']
+            flow = json.dumps(flow)
+            self.r.hset(
+                profileid + self.separator + twid + self.separator + 'flows',
+                uid,
+                flow,
+            )
+            label_set = True
+            to_send = {
+                'flow': flow,
+                'label': self.malicious_label,
+                'file': flow_type,
+                'uid': uid
+            }
+            self.publish('add_label', json.dumps(to_send))
+
         return label_set
 
     def get_module_labels_from_flow(self, profileid, twid, uid):
