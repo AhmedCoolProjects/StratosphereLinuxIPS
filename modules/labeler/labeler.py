@@ -67,7 +67,18 @@ class Module(Module, multiprocessing.Process):
                     return True
 
                 if utils.is_msg_intended_for(message, 'add_label'):
+                    msg = json.loads(message['data'])
+                    # name of the log file this flow is coming from
+                    file = msg['file']
+                    label = msg['label']
+                    uid = msg['uid']
+                    flow: dict = json.loads(msg['flow'])
+                    flow.pop('module_labels', None)
 
+                    flow.update({
+                        'label': label,
+                        'uid': uid
+                    })
 
                     if file not in self.open_handles:
                         self.open_labeled_logfile(file)
