@@ -1763,7 +1763,7 @@ class Database(ProfilingFlowsDatabase, object):
             urldata = json.dumps(urldata)
             self.rcache.hset('URLsInfo', url, urldata)
 
-    def subscribe(self, channel: str, ignore_subscribe_messages=False):
+    def subscribe(self, channel: str, subscriber: str, ignore_subscribe_messages=False):
         """Subscribe to channel"""
         # For when a TW is modified
         if channel not in self.supported_channels:
@@ -1773,7 +1773,33 @@ class Database(ProfilingFlowsDatabase, object):
         self.pubsub.subscribe(
             channel, ignore_subscribe_messages=ignore_subscribe_messages
         )
+
+        print(f"@@@@@@@@@@@@@@@@ init_queue_size  for channel {subscriber} for  {channel}")
+        self.init_queue_size(channel)
         return self.pubsub
+
+    def init_queue_size(self, channel: str):
+        """
+        this is slips' way to get and set the number of pending msgs in a pub/sub channel
+        here we store the channel name in the channel_queue_sizes key with no subscribers and no msgs in queue
+        """
+        # the format should be
+        # channel_queue_sizes = { 'channel_name': {
+        #                                       'q_size': int,
+        #                                       'subscribers': {
+        #                                               'flowalerts': msgs_read (int)
+        #                                       }
+        #   }}
+        if self.get_channel_info(channel):
+            # we already initialized the q size for this channel
+            print(f"@@@@@@@@@@@@@@@@ we already initialized the q size for this channel {channel}")
+            return
+
+        channel_info = {
+            'q_size': 0,
+            'subscribers': {}
+        }
+        self.r.hset('channel_queue_sizes', channel, json.dumps(channel_info))
 
     def publish_stop(self):
         """
@@ -1784,6 +1810,8 @@ class Database(ProfilingFlowsDatabase, object):
         self.print('Sending the stop signal to all listeners', 0, 3)
         for channel in all_channels_list:
             self.r.publish(channel, 'stop_process')
+
+
 
     def get_all_flows_in_profileid_twid(self, profileid, twid):
         """
