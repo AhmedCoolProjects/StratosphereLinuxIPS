@@ -30,8 +30,8 @@ class Module(Module, multiprocessing.Process, URLhaus):
         __database__.start(redis_port)
         # Get a separator from the database
         self.separator = __database__.getFieldSeparator()
-        self.c1 = __database__.subscribe('give_threat_intelligence')
-        self.c2 = __database__.subscribe('new_downloaded_file')
+        self.c1 = __database__.subscribe('give_threat_intelligence', self.name)
+        self.c2 = __database__.subscribe('new_downloaded_file', self.name)
         self.__read_configuration()
         self.get_malicious_ip_ranges()
         self.create_circl_lu_session()

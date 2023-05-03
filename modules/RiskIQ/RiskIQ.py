@@ -22,7 +22,7 @@ class Module(Module, multiprocessing.Process):
         multiprocessing.Process.__init__(self)
         self.outputqueue = outputqueue
         __database__.start(redis_port)
-        self.c1 = __database__.subscribe('new_ip')
+        self.c1 = __database__.subscribe('new_ip', self.name)
         self.read_configuration()
 
     def read_configuration(self):

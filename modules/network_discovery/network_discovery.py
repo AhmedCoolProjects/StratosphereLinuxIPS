@@ -29,9 +29,9 @@ class PortScanProcess(Module, multiprocessing.Process):
         # Get from the database the separator used to separate the IP and the word profile
         self.fieldseparator = __database__.getFieldSeparator()
         # To which channels do you wnat to subscribe? When a message arrives on the channel the module will wakeup
-        self.c1 = __database__.subscribe('tw_modified')
-        self.c2 = __database__.subscribe('new_notice')
-        self.c3 = __database__.subscribe('new_dhcp')
+        self.c1 = __database__.subscribe('tw_modified', self.name)
+        self.c2 = __database__.subscribe('new_notice', self.name)
+        self.c3 = __database__.subscribe('new_dhcp', self.name)
         # We need to know that after a detection, if we receive another flow
         # that does not modify the count for the detection, we are not
         # re-detecting again only because the threshold was overcomed last time.

@@ -26,7 +26,7 @@ class UpdateManager(Module, multiprocessing.Process):
         # Start the DB
         self.redis_port = redis_port
         __database__.start(self.redis_port)
-        self.c1 = __database__.subscribe('core_messages')
+        self.c1 = __database__.subscribe('core_messages', self.name)
         # Update file manager
         self.update_manager = UpdateFileManager(
             self.outputqueue, redis_port

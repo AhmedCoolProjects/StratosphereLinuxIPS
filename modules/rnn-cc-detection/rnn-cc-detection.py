@@ -29,7 +29,7 @@ class Module(Module, multiprocessing.Process):
         # outputqueue is connected to another process called OutputProcess
         self.outputqueue = outputqueue
         __database__.start(redis_port)
-        self.c1 = __database__.subscribe('new_letters')
+        self.c1 = __database__.subscribe('new_letters', self.name)
 
 
     def set_evidence(

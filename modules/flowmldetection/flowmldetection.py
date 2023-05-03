@@ -37,7 +37,7 @@ class Module(Module, multiprocessing.Process):
         self.outputqueue = outputqueue
         __database__.start(redis_port)
         # Subscribe to the channel
-        self.c1 = __database__.subscribe('new_flow')
+        self.c1 = __database__.subscribe('new_flow', self.name)
         self.fieldseparator = __database__.getFieldSeparator()
         # Set the output queue of our database instance
         __database__.setOutputQueue(self.outputqueue)

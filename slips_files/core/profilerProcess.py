@@ -62,7 +62,7 @@ class ProfilerProcess(multiprocessing.Process):
         self.debug = debug
         # there has to be a timeout or it will wait forever and never receive a new line
         self.timeout = 0.0000001
-        self.c1 = __database__.subscribe('reload_whitelist')
+        self.c1 = __database__.subscribe('reload_whitelist', self.name)
         self.separators = {
             'zeek': '',
             'suricata': '',

@@ -27,7 +27,7 @@ class Module(Module, multiprocessing.Process):
         # The outputqueue is connected to another process called OutputProcess
         self.outputqueue = outputqueue
         __database__.start(redis_port)
-        self.c1 = __database__.subscribe('new_blocking')
+        self.c1 = __database__.subscribe('new_blocking', self.name)
         self.os = platform.system()
         if self.os == 'Darwin':
             self.print('Mac OS blocking is not supported yet.')

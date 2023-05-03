@@ -36,9 +36,9 @@ class Module(Module, multiprocessing.Process):
         # Set the output queue of our database instance
         __database__.setOutputQueue(self.outputqueue)
         # To which channels do you wnat to subscribe? When a message arrives on the channel the module will wakeup
-        self.c1 = __database__.subscribe('new_ip')
-        self.c2 = __database__.subscribe('new_MAC')
-        self.c3 = __database__.subscribe('new_dns_flow')
+        self.c1 = __database__.subscribe('new_ip', self.name)
+        self.c2 = __database__.subscribe('new_MAC', self.name)
+        self.c3 = __database__.subscribe('new_dns_flow', self.name)
         # update asn every 1 month
         self.update_period = 2592000
         self.is_gw_mac_set = False

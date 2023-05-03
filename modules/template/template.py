@@ -42,7 +42,7 @@ class Module(Module, multiprocessing.Process):
         # - tw_modified
         # - evidence_added
         # Remember to subscribe to this channel in database.py
-        self.c1 = __database__.subscribe('new_ip')
+        self.c1 = __database__.subscribe('new_ip', self.name)
 
 
 

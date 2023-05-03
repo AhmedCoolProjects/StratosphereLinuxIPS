@@ -38,17 +38,17 @@ class Module(Module, multiprocessing.Process):
         # Retrieve the labels
         self.normal_label = __database__.normal_label
         self.malicious_label = __database__.malicious_label
-        self.c1 = __database__.subscribe('new_flow')
-        self.c2 = __database__.subscribe('new_ssh')
-        self.c3 = __database__.subscribe('new_notice')
-        self.c4 = __database__.subscribe('new_ssl')
-        self.c5 = __database__.subscribe('tw_closed')
-        self.c6 = __database__.subscribe('new_dns_flow')
-        self.c7 = __database__.subscribe('new_downloaded_file')
-        self.c8 = __database__.subscribe('new_smtp')
-        self.c9 = __database__.subscribe('new_software')
-        self.c10 = __database__.subscribe('new_weird')
-        self.c11 = __database__.subscribe('new_tunnel')
+        self.c1 = __database__.subscribe('new_flow', self.name)
+        self.c2 = __database__.subscribe('new_ssh', self.name)
+        self.c3 = __database__.subscribe('new_notice', self.name)
+        self.c4 = __database__.subscribe('new_ssl', self.name)
+        self.c5 = __database__.subscribe('tw_closed', self.name)
+        self.c6 = __database__.subscribe('new_dns_flow', self.name)
+        self.c7 = __database__.subscribe('new_downloaded_file', self.name)
+        self.c8 = __database__.subscribe('new_smtp', self.name)
+        self.c9 = __database__.subscribe('new_software', self.name)
+        self.c10 = __database__.subscribe('new_weird', self.name)
+        self.c11 = __database__.subscribe('new_tunnel', self.name)
         self.whitelist = Whitelist(outputqueue, redis_port)
         # helper contains all functions used to set evidence
         self.helper = Helper()

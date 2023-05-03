@@ -24,8 +24,8 @@ class Module(Module, multiprocessing.Process):
         self.outputqueue = outputqueue
         # Start the DB
         __database__.start(redis_port)
-        self.c1 = __database__.subscribe('new_arp')
-        self.c2 = __database__.subscribe('tw_closed')
+        self.c1 = __database__.subscribe('new_arp', self.name)
+        self.c2 = __database__.subscribe('tw_closed', self.name)
         self.read_configuration()
         # this dict will categorize arp requests by profileid_twid
         self.cache_arp_requests = {}

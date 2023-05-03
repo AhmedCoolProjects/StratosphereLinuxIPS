@@ -69,8 +69,8 @@ class EvidenceProcess(multiprocessing.Process):
             else:
                 self.popup_alerts = False
 
-        self.c1 = __database__.subscribe('evidence_added')
-        self.c2 = __database__.subscribe('new_blame')
+        self.c1 = __database__.subscribe('evidence_added', self.name)
+        self.c2 = __database__.subscribe('new_blame', self.name)
 
         # clear output/alerts.log
         self.logfile = self.clean_file(output_dir, 'alerts.log')

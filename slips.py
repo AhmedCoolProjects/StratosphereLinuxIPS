@@ -666,7 +666,7 @@ class Main:
                 int(profiler_process.pid)
             )
 
-            self.c1 = __database__.subscribe('finished_modules')
+            self.c1 = __database__.subscribe('finished_modules', self.name)
             self.metadata_man.enable_metadata()
 
             inputProcess = InputProcess(

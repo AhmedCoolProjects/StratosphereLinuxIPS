@@ -72,7 +72,7 @@ Remember to delete the __pycache__ dir if it's copied to the new module using:
 First, we need to subscribe to the channel ```new_flow``` 
 
 ```python
-self.c1 = __database__.subscribe('new_flow')
+self.c1 = __database__.subscribe('new_flow', self.name)
 ```
 
 So now everytime slips sees a new flow, you can access it from your module using the following line
@@ -100,7 +100,7 @@ Thus far, we have the following code that gets a msg everytime slips reads a new
 
 ```python
 def __init__(self, outputqueue, config, redis_port):
-        self.c1 = __database__.subscribe('new_flow')
+        self.c1 = __database__.subscribe('new_flow', self.name)
 ```
 
 
@@ -299,7 +299,7 @@ class Module(Module, multiprocessing.Process):
         # - tw_modified
         # - evidence_added
         # Remember to subscribe to this channel in database.py
-        self.c1 = __database__.subscribe('new_flow')
+        self.c1 = __database__.subscribe('new_flow', self.name)
 
     def print(self, text, verbose=1, debug=0):
         """

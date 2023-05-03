@@ -21,7 +21,7 @@ class Module(Module, multiprocessing.Process):
         # Retrieve the labels
         self.normal_label = __database__.normal_label
         self.malicious_label = __database__.malicious_label
-        self.c1 = __database__.subscribe('tw_closed')
+        self.c1 = __database__.subscribe('tw_closed', self.name)
         self.separator = __database__.separator
 
 

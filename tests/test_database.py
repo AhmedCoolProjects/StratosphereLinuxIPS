@@ -211,9 +211,9 @@ def test_setInfoForDomains(outputQueue):
 def test_subscribe(outputQueue):
     database = create_db_instace(outputQueue)
     # invalid channel
-    assert database.subscribe('invalid_channel') is False
+    assert database.subscribe('invalid_channel', 'tmp') is False
     # valid channel, shoud return a pubsub object
-    assert type(database.subscribe('tw_modified')) == redis.client.PubSub
+    assert type(database.subscribe('tw_modified', 'tmp')) == redis.client.PubSub
 
 
 def test_profile_moddule_labels(outputQueue):

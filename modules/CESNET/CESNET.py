@@ -27,7 +27,7 @@ class Module(Module, multiprocessing.Process):
         self.outputqueue = outputqueue
         __database__.start(redis_port)
         self.read_configuration()
-        self.c1 = __database__.subscribe('export_evidence')
+        self.c1 = __database__.subscribe('export_evidence', self.name)
         self.stop_module = False
 
 

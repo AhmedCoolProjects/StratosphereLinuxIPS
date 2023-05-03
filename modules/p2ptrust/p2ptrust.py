@@ -620,11 +620,11 @@ class Trust(Module, multiprocessing.Process):
                 # rotates p2p.log file every 1 day
                 self.rotator_thread.start()
 
-            self.c1 = __database__.subscribe('report_to_peers', ignore_subscribe_messages=True)
+            self.c1 = __database__.subscribe('report_to_peers', self.name, ignore_subscribe_messages=True)
             # channel to send msgs to whenever slips needs info from other peers about an ip
-            self.c2 = __database__.subscribe(self.p2p_data_request_channel, ignore_subscribe_messages=True)
+            self.c2 = __database__.subscribe(self.p2p_data_request_channel, self.name, ignore_subscribe_messages=True)
             # this channel receives peers requests/updates
-            self.c3 = __database__.subscribe(self.gopy_channel, ignore_subscribe_messages=True)
+            self.c3 = __database__.subscribe(self.gopy_channel, self.name, ignore_subscribe_messages=True)
             # should call self.update_callback
             # self.c4 = __database__.subscribe(self.slips_update_channel)
             while True:

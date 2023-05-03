@@ -25,7 +25,7 @@ class Module(Module, multiprocessing.Process):
         __database__.start(redis_port)
         self.separator = __database__.getFieldSeparator()
         # Subscribe to 'new_flow' channel
-        self.c1 = __database__.subscribe('new_flow')
+        self.c1 = __database__.subscribe('new_flow', self.name)
         # Read information how we should print timestamp.
         conf = ConfigParser()
         self.is_human_timestamp = conf.timeline_human_timestamp()

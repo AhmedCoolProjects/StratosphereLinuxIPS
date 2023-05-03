@@ -31,9 +31,9 @@ class Module(Module, multiprocessing.Process):
         # This line might not be needed when running SLIPS, but when VT module is run standalone, it still uses the
         # database and this line is necessary. Do not delete it, instead move it to line 21.
         __database__.start(redis_port)
-        self.c1 = __database__.subscribe('new_flow')
-        self.c2 = __database__.subscribe('new_dns_flow')
-        self.c3 = __database__.subscribe('new_url')
+        self.c1 = __database__.subscribe('new_flow', self.name)
+        self.c2 = __database__.subscribe('new_dns_flow', self.name)
+        self.c3 = __database__.subscribe('new_url', self.name)
         # Read the conf file
         self.__read_configuration()
         self.key = None

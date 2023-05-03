@@ -21,7 +21,7 @@ class Module(Module, multiprocessing.Process):
         # The outputqueue is connected to another process called OutputProcess
         self.outputqueue = outputqueue
         __database__.start(redis_port)
-        self.c1 = __database__.subscribe('new_http')
+        self.c1 = __database__.subscribe('new_http', self.name)
         self.connections_counter = {}
         self.empty_connections_threshold = 4
         # this is a list of hosts known to be resolved by malware

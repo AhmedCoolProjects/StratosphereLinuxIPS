@@ -13,9 +13,7 @@ class ProfilingFlowsDatabase(object):
         self.separator = '_'
 
 
-    def publish(self, channel, data):
-        """Publish something"""
-        self.r.publish(channel, data)
+
 
     def getIPData(self, ip: str) -> dict:
         """
@@ -63,6 +61,7 @@ class ProfilingFlowsDatabase(object):
 
     def get_ti_queue_size(self):
         return self.r.get('threat_intelligence_q_size')
+
 
     def give_threat_intelligence(
             self, profileid, twid, ip_state, starttime, uid, daddr, proto=False, lookup='', extra_info:dict =False

@@ -90,7 +90,7 @@ class InputProcess(multiprocessing.Process):
             target=self.remove_old_zeek_files, daemon=True
         )
         self.open_file_handlers = {}
-        self.c1 = __database__.subscribe('remove_old_files')
+        self.c1 = __database__.subscribe('remove_old_files', self.name)
         self.timeout = None
         # zeek rotated files to be deleted after a period of time
         self.to_be_deleted = []

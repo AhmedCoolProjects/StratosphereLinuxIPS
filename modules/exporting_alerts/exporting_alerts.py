@@ -30,7 +30,7 @@ class Module(Module, multiprocessing.Process):
         self.port = None
         self.outputqueue = outputqueue
         __database__.start(redis_port)
-        self.c1 = __database__.subscribe('export_evidence')
+        self.c1 = __database__.subscribe('export_evidence', self.name)
         self.read_configuration()
         if 'slack' in self.export_to:
             self.get_slack_token()
