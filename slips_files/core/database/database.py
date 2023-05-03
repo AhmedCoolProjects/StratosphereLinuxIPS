@@ -1774,6 +1774,8 @@ class Database(ProfilingFlowsDatabase, object):
             channel, ignore_subscribe_messages=ignore_subscribe_messages
         )
 
+        print(f"@@@@@@@@@@@@@@@@ registering subs {subscriber} for  {channel}")
+        self.register_subscriber(subscriber, channel)
         print(f"@@@@@@@@@@@@@@@@ init_queue_size  for channel {subscriber} for  {channel}")
         self.init_queue_size(channel)
         return self.pubsub
@@ -1792,6 +1794,17 @@ class Database(ProfilingFlowsDatabase, object):
         if channel_info:
             channel_info["q_size"] += 1
 
+            self.r.hset('channel_queue_sizes', channel, json.dumps(channel_info))
+
+    def register_subscriber(self, subscriber: str, channel: str):
+        """
+        add the given subscriber name to the subscribers dict of the given channel
+        the goal is to keep track of all subscribers and msg numbers of a channel the minute they subscribe
+        """
+        channel_info: dict = self.get_channel_info(channel)
+        if channel_info:
+            # 0 is the number of msgs read by this subscriber
+            channel_info["subscribers"].update({subscriber: 0})
             self.r.hset('channel_queue_sizes', channel, json.dumps(channel_info))
 
     def init_queue_size(self, channel: str):
@@ -1816,6 +1829,7 @@ class Database(ProfilingFlowsDatabase, object):
             'subscribers': {}
         }
         self.r.hset('channel_queue_sizes', channel, json.dumps(channel_info))
+
 
     def publish_stop(self):
         """
