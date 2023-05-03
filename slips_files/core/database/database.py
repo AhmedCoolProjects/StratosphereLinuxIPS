@@ -1778,6 +1778,22 @@ class Database(ProfilingFlowsDatabase, object):
         self.init_queue_size(channel)
         return self.pubsub
 
+    def get_channel_info(self, channel: str) -> dict:
+        """
+        returns a dict with the channel queue size and subscribers or False if the channel has no info in the db
+        """
+        channel_info = self.r.hget('channel_queue_sizes', channel)
+        return json.loads(channel_info) if channel_info else False
+
+    def publish(self, channel: str, data):
+        self.r.publish(channel, data)
+
+        channel_info: dict = self.get_channel_info(channel)
+        if channel_info:
+            channel_info["q_size"] += 1
+
+            self.r.hset('channel_queue_sizes', channel, json.dumps(channel_info))
+
     def init_queue_size(self, channel: str):
         """
         this is slips' way to get and set the number of pending msgs in a pub/sub channel
