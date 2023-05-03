@@ -1830,6 +1830,15 @@ class Database(ProfilingFlowsDatabase, object):
         }
         self.r.hset('channel_queue_sizes', channel, json.dumps(channel_info))
 
+    def mark_msg_as_read(self, channel: str, subscriber: str):
+        """
+        increases the given subscriber's number of msgs read by 1
+        """
+        channel_info: dict = self.get_channel_info(channel)
+        if channel_info:
+            channel_info["subscribers"][subscriber] += 1
+            self.r.hset('channel_queue_sizes', channel, json.dumps(channel_info))
+
 
     def publish_stop(self):
         """
