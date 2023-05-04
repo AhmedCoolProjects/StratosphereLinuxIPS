@@ -1058,7 +1058,7 @@ class ProfilingFlowsDatabase(object):
 
         self.rcache.hset('IPsInfo', ip, json.dumps(cached_ip_info))
         if is_new_info:
-            self.r.publish('ip_info_change', ip)
+            self.publish('ip_info_change', ip)
 
     def get_p2p_reports_about_ip(self, ip) -> dict:
         """
@@ -1535,7 +1535,7 @@ class ProfilingFlowsDatabase(object):
             domain_data = json.dumps(domain_data)
             self.rcache.hset('DomainsInfo', domain, domain_data)
             # Publish the changes
-            self.r.publish('dns_info_change', domain)
+            self.publish('dns_info_change', domain)
 
     def add_out_dns(
         self,
