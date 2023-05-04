@@ -380,10 +380,12 @@ class Module(Module, multiprocessing.Process):
                 # if timewindows are not updated for a long time (see at logsProcess.py),
                 # we will stop slips automatically.The 'stop_process' line is sent from logsProcess.py.
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_flow', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_flow'):
+                    __database__.mark_msg_as_read('new_flow', self.name)
                     mdata = message['data']
                     # Convert from json to dict
                     mdata = json.loads(mdata)

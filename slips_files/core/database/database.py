@@ -24,7 +24,6 @@ class Database(ProfilingFlowsDatabase, object):
         'evidence_added',
         'new_ip',
         'new_flow',
-        'new_dns',
         'new_dns_flow',
         'new_http',
         'new_ssl',
@@ -300,6 +299,8 @@ class Database(ProfilingFlowsDatabase, object):
                 self.print(f'Stopping slips due to redis.exceptions.ConnectionError: {ex}',0,1)
                 # make sure we publish the stop msg and log the error only once
                 self.mark_connection_error_as_logged()
+        except TypeError:
+            pass
 
 
     def set_slips_start_time(self):
@@ -373,7 +374,8 @@ class Database(ProfilingFlowsDatabase, object):
             # If the ip is new add it to the list of ips
             self.setNewIP(ip)
             # Publish that we have a new profile
-            self.publish('new_profile', ip)
+            # TODO no one is using this channel we do we have it!
+            # self.publish('new_profile', ip)
             return True
         except redis.exceptions.ResponseError as inst:
             self.outputqueue.put(
@@ -1763,7 +1765,7 @@ class Database(ProfilingFlowsDatabase, object):
             urldata = json.dumps(urldata)
             self.rcache.hset('URLsInfo', url, urldata)
 
-    def subscribe(self, channel: str, subscriber: str, ignore_subscribe_messages=False):
+    def subscribe(self, channel: str, subscriber: str, ignore_subscribe_msgs=True):
         """Subscribe to channel"""
         # For when a TW is modified
         if channel not in self.supported_channels:
@@ -1771,13 +1773,11 @@ class Database(ProfilingFlowsDatabase, object):
 
         self.pubsub = self.r.pubsub()
         self.pubsub.subscribe(
-            channel, ignore_subscribe_messages=ignore_subscribe_messages
+            channel, ignore_subscribe_messages=ignore_subscribe_msgs
         )
-
-        print(f"@@@@@@@@@@@@@@@@ registering subs {subscriber} for  {channel}")
-        self.register_subscriber(subscriber, channel)
-        print(f"@@@@@@@@@@@@@@@@ init_queue_size  for channel {subscriber} for  {channel}")
+        # this has to be called before register_subscriber
         self.init_queue_size(channel)
+        self.register_subscriber(subscriber, channel)
         return self.pubsub
 
     def get_channel_info(self, channel: str) -> dict:
@@ -1788,13 +1788,12 @@ class Database(ProfilingFlowsDatabase, object):
         return json.loads(channel_info) if channel_info else False
 
     def publish(self, channel: str, data):
-        self.r.publish(channel, data)
-
         channel_info: dict = self.get_channel_info(channel)
         if channel_info:
             channel_info["q_size"] += 1
-
             self.r.hset('channel_queue_sizes', channel, json.dumps(channel_info))
+        self.r.publish(channel, data)
+
 
     def register_subscriber(self, subscriber: str, channel: str):
         """
@@ -1821,7 +1820,6 @@ class Database(ProfilingFlowsDatabase, object):
         #   }}
         if self.get_channel_info(channel):
             # we already initialized the q size for this channel
-            print(f"@@@@@@@@@@@@@@@@ we already initialized the q size for this channel {channel}")
             return
 
         channel_info = {
@@ -1849,9 +1847,6 @@ class Database(ProfilingFlowsDatabase, object):
         self.print('Sending the stop signal to all listeners', 0, 3)
         for channel in all_channels_list:
             self.r.publish(channel, 'stop_process')
-
-
-
     def get_all_flows_in_profileid_twid(self, profileid, twid):
         """
         Return a list of all the flows in this profileid and twid

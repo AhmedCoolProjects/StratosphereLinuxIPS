@@ -725,6 +725,7 @@ class Main:
                     and utils.is_msg_intended_for(message, 'finished_modules')
                     and message['data'] == 'stop_slips'
                 ):
+                    __database__.mark_msg_as_read('finished_modules', self.name)
                     self.proc_man.shutdown_gracefully()
 
                 # Sleep some time to do routine checks

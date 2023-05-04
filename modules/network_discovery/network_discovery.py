@@ -730,10 +730,12 @@ class PortScanProcess(Module, multiprocessing.Process):
                 message = __database__.get_message(self.c1)
                 # print('Message received from channel {} with data {}'.format(message['channel'], message['data']))
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('tw_modified', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'tw_modified'):
+                    __database__.mark_msg_as_read('tw_modified', self.name)
                     # Get the profileid and twid
                     profileid = message['data'].split(':')[0]
                     twid = message['data'].split(':')[1]
@@ -764,10 +766,12 @@ class PortScanProcess(Module, multiprocessing.Process):
                 message = __database__.get_message(self.c2)
                 # print('Message received from channel {} with data {}'.format(message['channel'], message['data']))
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_notice', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_notice'):
+                    __database__.mark_msg_as_read('new_notice', self.name)
                     data = message['data']
                     if type(data) != str:
                         continue
@@ -789,10 +793,12 @@ class PortScanProcess(Module, multiprocessing.Process):
 
                 message = __database__.get_message(self.c3)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_dhcp', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_dhcp'):
+                    __database__.mark_msg_as_read('new_dhcp', self.name)
                     flow = json.loads(message['data'])
                     self.check_dhcp_scan(flow)
 

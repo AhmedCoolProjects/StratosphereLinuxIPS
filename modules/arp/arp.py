@@ -398,10 +398,12 @@ class Module(Module, multiprocessing.Process):
 
                 message = __database__.get_message(self.c1)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_arp', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_arp'):
+                    __database__.mark_msg_as_read('new_arp', self.name)
                     flow_details = json.loads(message['data'])
                     profileid = flow_details['profileid']
                     twid = flow_details['twid']
@@ -453,10 +455,12 @@ class Module(Module, multiprocessing.Process):
                 # if the tw is closed, remove all its entries from the cache dict
                 message = __database__.get_message(self.c2)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('tw_closed', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'tw_closed'):
+                    __database__.mark_msg_as_read('tw_closed', self.name)
                     profileid_tw = message['data']
                     # when a tw is closed, this means that it's too old so we don't check for arp scan in this time
                     # range anymore

@@ -15,6 +15,7 @@ from collections import OrderedDict
 class ProcessManager:
     def __init__(self, main):
         self.main = main
+        self.name = self.main.name
 
     def kill(self, module_name, INT=False):
         sig = signal.SIGINT if INT else signal.SIGKILL
@@ -285,13 +286,14 @@ class ProcessManager:
                         # print(f"Modules not finished yet {set(loaded_modules) - set(finished_modules)}")
                         try:
                             message = self.main.c1.get_message(timeout=0.00000001)
-                        except NameError:
+                        except (NameError, TypeError):
                             continue
-
                         if message and message['data'] in ('stop_process', 'stop_slips'):
+                            __database__.mark_msg_as_read('finished_modules', self.name)
                             continue
 
                         if utils.is_msg_intended_for(message, 'finished_modules'):
+                            __database__.mark_msg_as_read('finished_modules', self.name)
                             # all modules must reply with their names in this channel after
                             # receiving the stop_process msg
                             # to confirm that all processing is done and we can safely exit now

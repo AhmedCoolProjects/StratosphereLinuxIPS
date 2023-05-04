@@ -301,6 +301,7 @@ class Module(Module, multiprocessing.Process):
             try:
                 message = __database__.get_message(self.c1)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('export_evidence', self.name)
                     self.shutdown_gracefully()
                     return True
 
@@ -318,6 +319,7 @@ class Module(Module, multiprocessing.Process):
                     utils.is_msg_intended_for(message, 'export_evidence')
                     and self.send_to_warden
                 ):
+                    __database__.mark_msg_as_read('export_evidence', self.name)
                     evidence = json.loads(message['data'])
                     self.export_evidence(wclient, evidence)
 

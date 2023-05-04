@@ -321,10 +321,12 @@ class Module(Module, multiprocessing.Process):
                 msg = __database__.get_message(self.c1)
 
                 if msg and msg['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('export_evidence', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(msg, 'export_evidence'):
+                    __database__.mark_msg_as_read('export_evidence', self.name)
                     evidence = json.loads(msg['data'])
                     description = evidence['description']
                     if 'slack' in self.export_to and hasattr(self, 'BOT_TOKEN'):

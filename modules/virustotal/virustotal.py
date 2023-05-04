@@ -529,13 +529,18 @@ class Module(Module, multiprocessing.Process):
                 message = __database__.get_message(self.c1)
                 # if timewindows are not updated for a long time, Slips is stopped automatically.
                 # exit module if there's a problem with the API key
+                if self.incorrect_API_key:
+                    self.shutdown_gracefully()
+
                 if (
                     message and message['data'] == 'stop_process'
-                ) or self.incorrect_API_key:
+                ):
+                    __database__.mark_msg_as_read('new_flow', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_flow'):
+                    __database__.mark_msg_as_read('new_flow', self.name)
                     data = message['data']
                     data = json.loads(data)
                     # profileid = data['profileid']
@@ -574,9 +579,11 @@ class Module(Module, multiprocessing.Process):
 
                 message = __database__.get_message(self.c2)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_dns_flow', self.name)
                     self.shutdown_gracefully()
                     return True
                 if utils.is_msg_intended_for(message, 'new_dns_flow'):
+                    __database__.mark_msg_as_read('new_dns_flow', self.name)
                     data = message['data']
                     data = json.loads(data)
                     # profileid = data['profileid']
@@ -608,9 +615,11 @@ class Module(Module, multiprocessing.Process):
 
                 message = __database__.get_message(self.c3)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_url', self.name)
                     self.shutdown_gracefully()
                     return True
                 if utils.is_msg_intended_for(message, 'new_url'):
+                    __database__.mark_msg_as_read('new_url', self.name)
                     data = message['data']
                     data = json.loads(data)
                     # profileid = data['profileid']

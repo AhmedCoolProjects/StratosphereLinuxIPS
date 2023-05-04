@@ -468,10 +468,12 @@ class Module(Module, multiprocessing.Process):
             try:
                 message = __database__.get_message(self.c1)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_http', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_http'):
+                    __database__.mark_msg_as_read('new_http', self.name)
                     message = json.loads(message['data'])
                     profileid = message['profileid']
                     twid = message['twid']

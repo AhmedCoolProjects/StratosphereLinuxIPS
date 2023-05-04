@@ -632,26 +632,32 @@ class Trust(Module, multiprocessing.Process):
 
                 message = __database__.get_message(self.c1)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('report_to_peers', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'report_to_peers'):
+                    __database__.mark_msg_as_read('report_to_peers', self.name)
                     self.new_evidence_callback(message)
 
                 message = __database__.get_message(self.c2)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read(self.p2p_data_request_channel, self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, self.p2p_data_request_channel):
+                    __database__.mark_msg_as_read(self.p2p_data_request_channel, self.name)
                     self.data_request_callback(message)
 
                 message = __database__.get_message(self.c3)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read(self.gopy_channel, self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, self.gopy_channel):
+                    __database__.mark_msg_as_read(self.gopy_channel, self.name)
                     self.gopy_callback(message)
 
                 ret_code = self.pigeon.poll()

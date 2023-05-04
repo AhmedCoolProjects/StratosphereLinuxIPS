@@ -709,8 +709,11 @@ class InputProcess(multiprocessing.Process):
             # keep the rotated files for the period specified in slips.conf
             msg = __database__.get_message(self.c1)
             if msg and msg['data'] == 'stop_process':
+                __database__.mark_msg_as_read('remove_old_files', self.name)
                 return True
             if utils.is_msg_intended_for(msg, 'remove_old_files'):
+                __database__.mark_msg_as_read('remove_old_files', self.name)
+
                 # this channel receives renamed zeek log files, we can safely delete them and close their handle
                 changed_files = json.loads(msg['data'])
 

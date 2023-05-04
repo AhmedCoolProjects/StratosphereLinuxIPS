@@ -339,10 +339,12 @@ class Module(Module, multiprocessing.Process):
                 message = __database__.get_message(self.c1)
                 # Check that the message is for you. Probably unnecessary...
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_blocking', self.name)
                     self.shutdown_gracefully()
                     return True
                 # There's an IP that needs to be blocked
                 if utils.is_msg_intended_for(message, 'new_blocking'):
+                    __database__.mark_msg_as_read('new_blocking', self.name)
                     # message['data'] in the new_blocking channel is a dictionary that contains
                     # the ip and the blocking options
                     # Example of the data dictionary to block or unblock an ip:

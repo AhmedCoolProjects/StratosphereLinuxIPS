@@ -951,12 +951,14 @@ class Module(Module, multiprocessing.Process, URLhaus):
             try:
                 message = __database__.get_message(self.c1)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('give_threat_intelligence', self.name)
                     self.should_shutdown = True
 
                 # The channel now can receive an IP address or a domain name
                 if utils.is_msg_intended_for(
                     message, 'give_threat_intelligence'
                 ):
+                    __database__.mark_msg_as_read('give_threat_intelligence', self.name)
                     # Data is sent in the channel as a json dict so we need to deserialize it first
                     data = json.loads(message['data'])
                     # Extract data from dict
@@ -1011,9 +1013,11 @@ class Module(Module, multiprocessing.Process, URLhaus):
 
                 message = __database__.get_message(self.c2)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_downloaded_file', self.name)
                     self.should_shutdown = True
 
                 if utils.is_msg_intended_for(message, 'new_downloaded_file'):
+                    __database__.mark_msg_as_read('new_downloaded_file', self.name)
                     file_info = json.loads(message['data'])
                     if file_info['type'] == 'zeek':
                         self.is_malicious_hash(file_info)

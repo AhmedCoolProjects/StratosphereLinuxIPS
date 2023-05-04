@@ -1837,6 +1837,7 @@ class ProfilerProcess(multiprocessing.Process):
                     self.shutdown_gracefully()
                     return True
                 if utils.is_msg_intended_for(message, 'reload_whitelist'):
+                    __database__.mark_msg_as_read('reload_whitelist', self.name)
                     # if whitelist.conf is edited using pycharm
                     # a msg will be sent to this channel on every keypress, because pycharm saves file automatically
                     # otherwise this channel will get a msg only when whitelist.conf is modified and saved to disk

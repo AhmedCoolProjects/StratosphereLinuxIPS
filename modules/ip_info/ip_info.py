@@ -484,9 +484,12 @@ class Module(Module, multiprocessing.Process):
             try:
                 message = __database__.get_message(self.c2)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_MAC', self.name)
                     self.shutdown_gracefully()
                     return True
+
                 if utils.is_msg_intended_for(message, 'new_MAC'):
+                    __database__.mark_msg_as_read('new_MAC', self.name)
                     data = json.loads(message['data'])
                     mac_addr = data['MAC']
                     host_name = data.get('host_name', False)
@@ -506,10 +509,12 @@ class Module(Module, multiprocessing.Process):
 
                 message = __database__.get_message(self.c3)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_dns_flow', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_dns_flow'):
+                    __database__.mark_msg_as_read('new_dns_flow', self.name)
                     data = message['data']
                     data = json.loads(data)
                     # profileid = data['profileid']
@@ -525,10 +530,12 @@ class Module(Module, multiprocessing.Process):
                 # if timewindows are not updated for a long time (see at logsProcess.py),
                 # we will stop slips automatically.The 'stop_process' line is sent from logsProcess.py.
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_ip', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_ip'):
+                    __database__.mark_msg_as_read('new_ip', self.name)
                     # Get the IP from the message
                     ip = message['data']
                     try:

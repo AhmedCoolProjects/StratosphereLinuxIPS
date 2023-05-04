@@ -103,10 +103,12 @@ class Module(Module, multiprocessing.Process):
             try:
                 message = __database__.get_message(self.c1)
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_ip', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_ip'):
+                    __database__.mark_msg_as_read('new_ip', self.name)
                     ip = message['data']
                     if utils.is_ignored_ip(ip):
                         continue

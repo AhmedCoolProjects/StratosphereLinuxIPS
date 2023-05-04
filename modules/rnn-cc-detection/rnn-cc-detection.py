@@ -137,10 +137,12 @@ class Module(Module, multiprocessing.Process):
                 message = __database__.get_message(self.c1)
                 # Check that the message is for you. Probably unnecessary...
                 if message and message['data'] == 'stop_process':
+                    __database__.mark_msg_as_read('new_letters', self.name)
                     self.shutdown_gracefully()
                     return True
 
                 if utils.is_msg_intended_for(message, 'new_letters'):
+                    __database__.mark_msg_as_read('new_letters', self.name)
                     data = message['data']
                     data = json.loads(data)
                     pre_behavioral_model = data['new_symbol']
