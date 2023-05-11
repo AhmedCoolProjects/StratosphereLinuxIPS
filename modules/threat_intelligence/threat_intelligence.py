@@ -984,15 +984,6 @@ class Module(Module, multiprocessing.Process, URLhaus):
             return True
 
 
-    def have_pending_ips_in_queue(self):
-        """ check if this module has pending ips/domains to analyse """
-        q_size = __database__.get_ti_queue_size()
-        if q_size is None:
-            return False
-        if int(q_size) > 0:
-            return True
-        return False
-
     def pre_main(self):
         utils.drop_root_privs()
         # Load the local Threat Intelligence files that are
@@ -1002,7 +993,6 @@ class Module(Module, multiprocessing.Process, URLhaus):
         self.update_local_file('own_malicious_JA3.csv')
         self.update_local_file('own_malicious_JARM.csv')
         self.circllu_calls_thread.start()
-        __database__.init_ti_queue()
 
     def main(self):
         # The channel now can receive an IP address or a domain name

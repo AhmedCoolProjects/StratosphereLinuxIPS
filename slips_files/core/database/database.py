@@ -1445,9 +1445,9 @@ class Database(ProfilingFlowsDatabase, object):
         elif attacker_direction in ('dip', 'dstip'):
             # the dstip is the malicious one
             self.update_threat_level(f'profile_{attacker}', threat_level, confidence)
-
-
         return True
+
+
 
     def mark_evidence_as_processed(self, evidence_ID):
         """
