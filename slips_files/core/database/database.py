@@ -1327,6 +1327,7 @@ class Database(ProfilingFlowsDatabase, object):
             description,
             timestamp,
             category,
+            module_name,
             source_target_tag=False,
             conn_count=False,
             port=False,
@@ -1348,6 +1349,7 @@ class Database(ProfilingFlowsDatabase, object):
         uid: can be a single uid as a str, or a list of uids causing the evidence.
                         needed to get the flow from the database.
         category: what is this evidence category according to IDEA categories
+        module_name: the module that detected for this evidence
         conn_count: the number of packets/flows/nxdomains that formed this scan/sweep/DGA.
 
         source_target_tag:
@@ -1447,6 +1449,7 @@ class Database(ProfilingFlowsDatabase, object):
         elif attacker_direction in ('dip', 'dstip'):
             # the dstip is the malicious one
             self.update_threat_level(f'profile_{attacker}', threat_level, confidence)
+        self.set_module_label_to_flow(profileid, twid, uids, module_name, self.malicious_label)
         return True
 
 
@@ -1637,7 +1640,6 @@ class Database(ProfilingFlowsDatabase, object):
                 uid,
                 flow,
             )
-            label_set = True
             to_send = {
                 'flow': flow,
                 'label': self.malicious_label,
@@ -1645,6 +1647,7 @@ class Database(ProfilingFlowsDatabase, object):
                 'uid': uid
             }
             self.publish('add_label', json.dumps(to_send))
+            label_set = True
 
         return label_set
 
