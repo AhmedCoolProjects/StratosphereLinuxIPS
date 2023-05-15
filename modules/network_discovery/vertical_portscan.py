@@ -10,6 +10,7 @@ import json
 import threading
 
 class VerticalPortscan():
+    name = 'Network Discovery'
     def __init__(self):
         # We need to know that after a detection, if we receive another flow
         # that does not modify the count for the detection, we are not
@@ -86,9 +87,23 @@ class VerticalPortscan():
                         f'Total packets sent to all ports: {pkts_sent}. '
                         f'Confidence: {confidence}. by Slips'
                     )
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, conn_count=pkts_sent,
-                                 proto=protocol, profileid=profileid, twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            conn_count=pkts_sent,
+            proto=protocol,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
         # Set 'malicious' label in the detected profile
         __database__.set_profile_module_label(
             profileid, evidence_type, self.malicious_label

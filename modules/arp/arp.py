@@ -221,9 +221,22 @@ class Module(Module, multiprocessing.Process):
         attacker_direction = 'srcip'
         source_target_tag = 'Recon'  # srcip description
         attacker = profileid.split('_')[1]
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 ts, category, source_target_tag=source_target_tag, conn_count=conn_count,
-                                 profileid=profileid, twid=twid, uid=uids)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            ts,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            conn_count=conn_count,
+            profileid=profileid,
+            twid=twid,
+            uid=uids
+        )
         # after we set evidence, clear the dict so we can detect if it does another scan
         try:
             self.cache_arp_requests.pop(f'{profileid}_{twid}')
@@ -264,8 +277,20 @@ class Module(Module, multiprocessing.Process):
             category = 'Anomaly.Behaviour'
             attacker_direction = 'srcip'
             attacker = profileid.split('_')[1]
-            __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence,
-                                     description, ts, category, profileid=profileid, twid=twid, uid=uid)
+            __database__.setEvidence(
+                evidence_type,
+                attacker_direction,
+                attacker,
+                threat_level,
+                confidence,
+                description,
+                ts,
+                category,
+                self.name,
+                profileid=profileid,
+                twid=twid,
+                uid=uid
+            )
             return True
 
     def detect_unsolicited_arp(
@@ -288,9 +313,21 @@ class Module(Module, multiprocessing.Process):
             attacker_direction = 'srcip'
             source_target_tag = 'Recon'   # srcip description
             attacker = profileid.split('_')[1]
-            __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence,
-                                     description, ts, category, source_target_tag=source_target_tag,
-                                     profileid=profileid, twid=twid, uid=uid)
+            __database__.setEvidence(
+                evidence_type,
+                attacker_direction,
+                attacker,
+                threat_level,
+                confidence,
+                description,
+                ts,
+                category,
+                self.name,
+                source_target_tag=source_target_tag,
+                profileid=profileid,
+                twid=twid,
+                uid=uid
+            )
             return True
 
     def detect_MITM_ARP_attack(self, profileid, twid, uid, saddr, ts, src_mac):
@@ -349,9 +386,21 @@ class Module(Module, multiprocessing.Process):
                           f'now belonging to {saddr}, was seen before for {original_IP}.'
 
             # self.print(f'{saddr} is claiming to have {src_mac}')
-            __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence,
-                                     description, ts, category, source_target_tag=source_target_tag,
-                                     profileid=profileid, twid=twid, uid=uid)
+            __database__.setEvidence(
+                evidence_type,
+                attacker_direction,
+                attacker,
+                threat_level,
+                confidence,
+                description,
+                ts,
+                category,
+                self.name,
+                source_target_tag=source_target_tag,
+                profileid=profileid,
+                twid=twid,
+                uid=uid
+            )
             return True
 
     def shutdown_gracefully(self):

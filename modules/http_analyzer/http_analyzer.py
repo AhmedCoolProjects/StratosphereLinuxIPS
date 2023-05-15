@@ -85,9 +85,21 @@ class Module(Module, multiprocessing.Process):
                 category = 'Anomaly.Behaviour'
                 confidence = 1
                 description = f'suspicious user-agent: {user_agent} while connecting to {host}{uri}'
-                __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence,
-                                         description, timestamp, category, source_target_tag=source_target_tag,
-                                         profileid=profileid, twid=twid, uid=uid)
+                __database__.setEvidence(
+                    evidence_type,
+                    attacker_direction,
+                    attacker,
+                    threat_level,
+                    confidence,
+                    description,
+                    timestamp,
+                    category,
+                    self.name,
+                    source_target_tag=source_target_tag,
+                    profileid=profileid,
+                    twid=twid,
+                    uid=uid
+                )
                 return True
         return False
 
@@ -128,8 +140,20 @@ class Module(Module, multiprocessing.Process):
             category = 'Anomaly.Connection' 
             confidence = 1
             description = f'multiple empty HTTP connections to {host}'
-            __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence,
-                                     description, timestamp, category, profileid=profileid, twid=twid, uid=uids)
+            __database__.setEvidence(
+                evidence_type,
+                attacker_direction,
+                attacker,
+                threat_level,
+                confidence,
+                description,
+                timestamp,
+                category,
+                self.name,
+                profileid=profileid,
+                twid=twid,
+                uid=uids
+            )
             # reset the counter
             self.connections_counter[host] = ([], 0)
             return True
@@ -154,9 +178,20 @@ class Module(Module, multiprocessing.Process):
             f'while connecting to {host}{uri}. '
             f'IP has MAC vendor: {vendor.capitalize()}'
         )
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, profileid=profileid,
-                                 twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence, description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
         
     def report_executable_mime_type(self, mime_type, attacker, profileid, twid, uid, timestamp):
         confidence = 1
@@ -170,9 +205,21 @@ class Module(Module, multiprocessing.Process):
         description = f'download of an executable with mime type: {mime_type} ' \
                       f'by {srcip} from {attacker} {ip_identification}.'
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, profileid=profileid,
-                                 twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
 
 
     def check_incompatible_user_agent(
@@ -400,9 +447,20 @@ class Module(Module, multiprocessing.Process):
         description = (
             f'using multiple user-agents: {ua} then {user_agent}'
         )
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, profileid=profileid,
-                                 twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence, description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
         return True
 
 
@@ -420,9 +478,21 @@ class Module(Module, multiprocessing.Process):
         saddr = profileid.split('_')[-1]
         description = (f'Unencrypted HTTP traffic from {saddr} to {daddr}.')
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, profileid=profileid,
-                                 twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
         return True
 
 
@@ -456,9 +526,21 @@ class Module(Module, multiprocessing.Process):
             description = (
                f'A downloaded file from pastebin.com. size: {response_body_len} MBs'
             )
-            __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence,
-                                     description, timestamp, category, source_target_tag=source_target_tag,
-                                     profileid=profileid, twid=twid, uid=uid)
+            __database__.setEvidence(
+                evidence_type,
+                attacker_direction,
+                attacker,
+                threat_level,
+                confidence,
+                description,
+                timestamp,
+                category,
+                self.name,
+                source_target_tag=source_target_tag,
+                profileid=profileid,
+                twid=twid,
+                uid=uid
+            )
             return True
 
 

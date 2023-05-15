@@ -95,10 +95,22 @@ class PortScanProcess(Module, multiprocessing.Process):
         source_target_tag = 'Recon'
         description = msg
         # this one is detected by zeek so we can't track the uids causing it
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, conn_count=hosts_scanned,
-                                 profileid=profileid, twid=twid, uid=uid)
-
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            conn_count=hosts_scanned,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
     def check_portscan_type3(self):
         """
         ###
@@ -256,9 +268,23 @@ class PortScanProcess(Module, multiprocessing.Process):
                 f'Confidence: {confidence}. by Slips'
             )
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, conn_count=pkts_sent,
-                                 proto=protocol, profileid=profileid, twid=twid, uid=icmp_flows_uids)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            conn_count=pkts_sent,
+            proto=protocol,
+            profileid=profileid,
+            twid=twid,
+            uid=icmp_flows_uids
+        )
         # Set 'malicious' label in the detected profile
         __database__.set_profile_module_label(
             profileid, evidence_type, self.malicious_label
@@ -287,9 +313,22 @@ class PortScanProcess(Module, multiprocessing.Process):
             f'Confidence: {confidence}. by Slips'
         )
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag,
-                                 conn_count=number_of_requested_addrs, profileid=profileid, twid=twid, uid=uids)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            conn_count=number_of_requested_addrs,
+            profileid=profileid,
+            twid=twid,
+            uid=uids
+        )
 
         # Set 'malicious' label in the detected profile
         __database__.set_profile_module_label(

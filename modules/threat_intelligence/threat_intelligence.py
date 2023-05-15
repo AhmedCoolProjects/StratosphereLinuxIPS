@@ -136,9 +136,21 @@ class Module(Module, multiprocessing.Process, URLhaus):
                       f'Tags: {tags} ' \
                       f'{identification}'
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, profileid=profileid,
-                                 twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            profileid=profileid,
+            source_target_tag=source_target_tag,
+            twid=twid,
+            uid=uid
+        )
 
 
     def set_evidence_malicious_ip(
@@ -214,9 +226,21 @@ class Module(Module, multiprocessing.Process, URLhaus):
         else:
             source_target_tag = 'BlacklistedIP'
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, profileid=profileid,
-                                 twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
 
         # mark this ip as malicious in our database
         ip_info = {'threatintelligence': ip_info}
@@ -271,9 +295,21 @@ class Module(Module, multiprocessing.Process, URLhaus):
         if tags:
             description += f'with tags: {tags}. '
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag, profileid=profileid,
-                                 twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            profileid=profileid,
+            source_target_tag=source_target_tag,
+            twid=twid,
+            uid=uid
+        )
 
     def is_valid_threat_level(self, threat_level):
         return threat_level in utils.threat_levels
@@ -689,17 +725,20 @@ class Module(Module, multiprocessing.Process, URLhaus):
             f'Score: {confidence}. {ip_identification}'
         )
 
-        __database__.setEvidence(evidence_type,
-                                 attacker_direction,
-                                 attacker,
-                                 threat_level,
-                                 confidence,
-                                 description,
-                                 file_info['flow']["starttime"],
-                                 category,
-                                 profileid=file_info["profileid"],
-                                 twid=file_info["twid"],
-                                 uid=file_info['flow']["uid"])
+        __database__.setEvidence(
+             evidence_type,
+             attacker_direction,
+             attacker,
+             threat_level,
+             confidence,
+             description,
+             file_info['flow']["starttime"],
+             category,
+             self.name,
+             profileid=file_info["profileid"],
+             twid=file_info["twid"],
+             uid=file_info['flow']["uid"]
+        )
 
     def circl_lu(self, flow_info: dict):
         """

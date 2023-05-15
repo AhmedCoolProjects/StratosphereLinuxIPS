@@ -509,9 +509,23 @@ class Module(Module, multiprocessing.Process):
            f" on port: {portproto} {port_info}.  {dstip_id}"
         )
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, source_target_tag=source_target_tag,
-                                 port=dport, proto=protocol, profileid=profileid, twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            source_target_tag=source_target_tag,
+            port=dport,
+            proto=protocol,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
 
     def pre_main(self):
         utils.drop_root_privs()

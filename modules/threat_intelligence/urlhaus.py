@@ -170,6 +170,7 @@ class URLhaus():
                                  description,
                                  flow["starttime"],
                                  category,
+                                 self.name,
                                  profileid=file_info["profileid"],
                                  twid=file_info["twid"],
                                  uid=flow["uid"])
@@ -207,5 +208,17 @@ class URLhaus():
         category = 'Malware'
         evidence_type = 'MaliciousURL'
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, profileid=profileid, twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )

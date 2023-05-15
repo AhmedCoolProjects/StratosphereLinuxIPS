@@ -472,8 +472,20 @@ class Trust(Module, multiprocessing.Process):
             f' Source: Slips P2P network.'
         )
 
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, profileid=profileid, twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
 
         # add this ip to our MaliciousIPs hash in the database
         __database__.set_malicious_ip(ip, profileid, twid)

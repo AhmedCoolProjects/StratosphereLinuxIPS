@@ -21,9 +21,11 @@ class Module(Module, multiprocessing.Process):
     def __init__(self, outputqueue, redis_port):
         time.sleep(5)
         multiprocessing.Process.__init__(self)
+        super().__init__(outputqueue)
         self.outputqueue = outputqueue
         __database__.start(redis_port)
         self.c1 = __database__.subscribe('add_label')
+        self.channels = {'add_label': self.c1}
         self.open_handles = {}
 
 
@@ -51,48 +53,34 @@ class Module(Module, multiprocessing.Process):
         # Confirm that the module is done processing
         __database__.publish('finished_modules', self.name)
 
-    def run(self):
+    def pre_main(self):
         # sleep 5s until all modules are started, the output dir is stored in the db
         # and then create the labeled dir inside of it
         time.sleep(5)
         self.init_labels_dir()
-
         #todo handle all input types, zeek suricata zeek tabs etc
         utils.drop_root_privs()
-        while True:
-            try:
-                message = __database__.get_message(self.c1)
-                if message and message['data'] == 'stop_process':
-                    self.shutdown_gracefully()
-                    return True
 
-                if utils.is_msg_intended_for(message, 'add_label'):
-                    msg = json.loads(message['data'])
-                    # name of the log file this flow is coming from
-                    file = msg['file']
-                    label = msg['label']
-                    uid = msg['uid']
-                    flow: dict = json.loads(msg['flow'])
-                    flow.pop('module_labels', None)
+    def main(self):
+        if msg := self.get_msg('add_label'):
+            msg = json.loads(msg['data'])
+            # name of the log file this flow is coming from
+            file = msg['file']
+            label = msg['label']
+            uid = msg['uid']
+            flow: dict = json.loads(msg['flow'])
+            # remove all module labels, the label we're adding will not depend on the modules
+            flow.pop('module_labels', None)
 
-                    flow.update({
-                        'label': label,
-                        'uid': uid
-                    })
+            flow.update({
+                'label': label,
+                'uid': uid
+            })
 
-                    if file not in self.open_handles:
-                        self.open_labeled_logfile(file)
-                    labeled_log_file: TextIO = self.open_handles[file]
+            if file not in self.open_handles:
+                self.open_labeled_logfile(file)
+            labeled_log_file: TextIO = self.open_handles[file]
 
-                    json.dump(flow, labeled_log_file)
-                    labeled_log_file.write('\n')
+            json.dump(flow, labeled_log_file)
+            labeled_log_file.write('\n')
 
-
-            except KeyboardInterrupt:
-                self.shutdown_gracefully()
-                return True
-            except Exception:
-                exception_line = sys.exc_info()[2].tb_lineno
-                self.print(f'Problem on the run() line {exception_line}', 0, 1)
-                self.print(traceback.format_exc(), 0, 1)
-                return True

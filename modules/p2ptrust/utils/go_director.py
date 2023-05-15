@@ -25,7 +25,7 @@ class GoDirector:
     Requests from other peers are validated, data is read from the database and from slips, and the response is sent.
     If peer sends invalid data, his reputation is lowered.
     """
-
+    name = 'p2p'
     def __init__(
         self,
         printer: Printer,
@@ -464,8 +464,20 @@ class GoDirector:
             twid = __database__.get_timewindow(timestamp, profileid_of_attacker)
 
         uid = ''
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, profileid=profileid_of_attacker, twid=twid, uid=uid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            profileid=profileid_of_attacker,
+            twid=twid,
+            uid=uid
+        )
 
 
     def process_go_update(self, data: dict) -> None:

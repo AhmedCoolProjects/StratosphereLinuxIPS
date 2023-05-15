@@ -274,8 +274,6 @@ class Module(Module, multiprocessing.Process):
         # check if the daddr belongs to it
         return bool(self.whitelist.is_ip_in_org(daddr, org_name))
 
-
-
     def is_ignored_ip_data_upload(self, ip):
         """
         Ignore the IPs that we shouldn't alert about

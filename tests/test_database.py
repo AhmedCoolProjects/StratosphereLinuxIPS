@@ -152,8 +152,20 @@ def test_setEvidence(outputQueue):
     timestamp = time.time()
     category = 'Infomation'
     uid = '123'
-    database.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                         timestamp, category, profileid=profileid, twid=twid, uid=uid)
+    database.setEvidence(
+        evidence_type,
+        attacker_direction,
+        attacker,
+        threat_level,
+        confidence,
+        description,
+        timestamp,
+        category,
+        'test',
+        profileid=profileid,
+        twid=twid,
+        uid=uid
+    )
 
     added_evidence = database.r.hget(f'evidence{profileid}', twid)
     added_evidence2 = database.r.hget(f'{profileid}_{twid}', 'Evidence')

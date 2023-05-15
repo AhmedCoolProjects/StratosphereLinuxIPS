@@ -384,8 +384,20 @@ class Module(Module, multiprocessing.Process):
         ip_identification = __database__.getIPIdentification(daddr)
         description = f'Malicious flow by ML. Src IP {saddr}:{sport} to {daddr}:{dport} {ip_identification}'
         timestamp = utils.convert_format(datetime.datetime.now(), utils.alerts_format)
-        __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence, description,
-                                 timestamp, category, profileid=profileid, twid=twid)
+        __database__.setEvidence(
+            evidence_type,
+            attacker_direction,
+            attacker,
+            threat_level,
+            confidence,
+            description,
+            timestamp,
+            category,
+            self.name,
+            profileid=profileid,
+            twid=twid,
+            uid=uid
+        )
 
     def shutdown_gracefully(self):
         # Confirm that the module is done processing

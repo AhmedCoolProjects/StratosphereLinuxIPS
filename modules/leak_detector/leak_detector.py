@@ -219,9 +219,23 @@ class Module(Module, multiprocessing.Process):
                 category = 'Malware'
                 confidence = 0.9
                 threat_level = 'high'
-                __database__.setEvidence(evidence_type, attacker_direction, attacker, threat_level, confidence,
-                                         description, ts, category, source_target_tag=source_target_tag, port=dport,
-                                         proto=proto, profileid=profileid, twid=twid, uid=uid)
+                __database__.setEvidence(
+                    evidence_type,
+                    attacker_direction,
+                    attacker,
+                    threat_level,
+                    confidence,
+                    description,
+                    ts,
+                    category,
+                    self.name,
+                    source_target_tag=source_target_tag,
+                    port=dport,
+                    proto=proto,
+                    profileid=profileid,
+                    twid=twid,
+                    uid=uid
+                )
 
     def compile_and_save_rules(self):
         """
@@ -251,6 +265,7 @@ class Module(Module, multiprocessing.Process):
                 self.print(f"Error compiling {yara_rule}.")
                 return False
         return True
+
     def delete_compiled_rules(self):
         """
         delete old YARA compiled rules when a new version of yara is being used
